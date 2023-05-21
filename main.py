@@ -8,7 +8,7 @@ def forward_selection(num_of_features):
     print("Beginning search.\n")
     outputFeatures = ""   # use to output current features set, may delete in part II
     bestFeatures = ""     # use to output current features set, may delete in part II
-    for i in range(num_of_features):
+    while (num_of_features):
         add_feature_on_level = 0
         bsf_accuracy = 0
         for k in range(1, num_of_features + 1):
@@ -16,8 +16,8 @@ def forward_selection(num_of_features):
             if k not in currentSet:
                 accuracy = leaveOutCrossValidation(currentSet, k)
                 temp = str(k)
-                for j in range(len(currentSet)):
-                    temp = temp + "," + str(currentSet[j])
+                for j in currentSet:
+                    temp = temp + "," + str(j)
                 print("        Using feature(s) {", temp,"} accuracy is", accuracy, "%")
                 if accuracy > bsf_accuracy:
                     bsf_accuracy = accuracy
@@ -74,6 +74,7 @@ def backward_elimination(num_of_features):
 def special_algorithm(num_of_features):
     return
 
+# only generate randomo number in part I
 def leaveOutCrossValidation(currentSet, k):
     return round(random.uniform(0, 100), 1)
 
