@@ -38,7 +38,39 @@ def forward_selection(num_of_features):
     print("Finished search!! The best feature subset is {", bestFeatures, "} which has an accuracy of", highestAccuracy, "%")
 
 def backward_elimination(num_of_features):
-    return
+    decreasingCount = 0
+    current_set = list(range(1, num_of_features + 1))
+    highest_accuracy = leaveOutCrossValidation(current_set, 1)
+    print("Using all", num_of_features, "features, I get an accuracy of", highest_accuracy, "%\n")
+    print("Beginning search.\n")
+    output_features = ", ".join(str(feature) for feature in current_set)
+    for i in range(num_of_features - 1, 0, -1):
+        remove_feature_on_level = 0
+        bsf_accuracy = 0
+        temp = ""
+        for k in current_set:
+            current_set_copy = current_set.copy()
+            current_set_copy.remove(k)
+            accuracy = leaveOutCrossValidation(current_set_copy, k)
+            temp = ", ".join(str(feature) for feature in current_set_copy)
+            print("        Feature set after removing", k, " {", temp, "} accuracy is", accuracy, "%")
+            if accuracy > bsf_accuracy:
+                bsf_accuracy = accuracy
+                remove_feature_on_level = k
+                output_features = temp
+        current_set.remove(remove_feature_on_level)
+        print("\nFeature set {", output_features, "} was best, accuracy is", bsf_accuracy, "%\n")
+        if bsf_accuracy <= highest_accuracy:
+            print("(Warning, Accuracy has decreased!)\n")
+            decreasingCount += 1
+            if decreasingCount >= num_of_features / 4:  # allows accuracy to decrease 1/4 of num_of_features times
+                break
+        else:
+            highest_accuracy = bsf_accuracy
+            best_features = output_features
+
+    print("Finished search!! The best feature subset is {", best_features, "} which has an accuracy of",
+          highest_accuracy, "%")
 
 def special_algorithm(num_of_features):
     return
