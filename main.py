@@ -2,10 +2,9 @@ import random
 
 def forward_selection(num_of_features):
     currentSet = []
-    highestAccuracy = 0
     decreasingCount = 0  # use to stop searching when accuracy decreases
-    accuracy = leaveOutCrossValidation(currentSet, 1)
-    print("Using no features and \"random\" evaluation, I get an accuracy of ", accuracy, "%\n")
+    highestAccuracy = leaveOutCrossValidation(currentSet, 1)
+    print("Using no features and \"random\" evaluation, I get an accuracy of ", highestAccuracy, "%\n")
     print("Beginning search.\n")
     outputFeatures = ""   # use to output current features set, may delete in part II
     bestFeatures = ""     # use to output current features set, may delete in part II
