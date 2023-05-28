@@ -119,7 +119,7 @@ if __name__ == "__main__":
                     data_set.append(column)        # split the line and get each column value then add to data_set
             start_time = time.time()
             print("Accuracy for the small dataset is ", round(valid.validation(data_set), 3))
-            print("--- %s seconds ---" % (time.time() - start_time))
+            print("--- %s seconds ---" % round((time.time() - start_time), 6))
         elif choice == 2:
             with open("small-test-dataset.txt", "r") as file:
                 data_set = []
@@ -129,7 +129,7 @@ if __name__ == "__main__":
                     data_set.append(column_to_add)        # split the line and get each column value then add to data_set
             start_time = time.time()
             print("Accuracy for the small dataset is ", round(valid.validation(data_set), 3))
-            print("--- %s seconds ---" % (time.time() - start_time))
+            print("--- %s seconds ---" % round((time.time() - start_time), 6))
         elif choice == 3:
             with open("large-test-dataset.txt", "r") as file:
                 data_set = []
@@ -138,7 +138,7 @@ if __name__ == "__main__":
                     data_set.append(column)        # split the line and get each column value then add to data_set
             start_time = time.time()
             print("Accuracy for the large dataset is ", round(valid.validation(data_set), 3))
-            print("--- %s seconds ---" % (time.time() - start_time))
+            print("--- %s seconds ---" % round((time.time() - start_time), 6))
         elif choice == 4:
             with open("large-test-dataset.txt", "r") as file:
                 data_set = []
@@ -148,6 +148,6 @@ if __name__ == "__main__":
                     data_set.append(column_to_add)        # split the line and get each column value then add to data_set
             start_time = time.time()
             print("Accuracy for the large dataset is ", round(valid.validation(data_set), 3))
-            print("--- %s seconds ---" % (time.time() - start_time))
+            print("--- %s seconds ---" % round((time.time() - start_time), 6))
             
         
