@@ -123,7 +123,7 @@ print("3. Team 22’s Special Algorithm")
 print("4. Check Nearest-Neighbor Accuracy")
 choice = int(input("Type the number of the algorithm you want to run: "))
 correct_count = 0
-with open("/Users/yuki/Downloads/small-test-dataset.txt", "r") as file:
+with open("small-test-dataset.txt", "r") as file:
     data = []
     for row in file.readlines():  # get each line
         data.append(row.split())  # split the line and get each column value then add to data_set
@@ -135,14 +135,14 @@ elif choice == 2:
 elif choice == 3:
     special_algorithm(data)
 elif choice == 4:
-    with open("/Users/yuki/Downloads/small-test-dataset.txt", "r") as file:
+    with open("small-test-dataset.txt", "r") as file:
         data_set = []
         for row in file.readlines():            # get each line
             column = row.split()
             column_to_add = [column[0], column[3], column[5], column[7]]
             data_set.append(column_to_add)        # split the line and get each column value then add to data_set
     print("Accuracy for the small dataset is ", round(nearest_neighbor_classifier(data_set), 3))
-    with open("/Users/yuki/Downloads/large-test-dataset.txt", "r") as file:
+    with open("large-test-dataset.txt", "r") as file:
         data_set = []
         for row in file.readlines():            # get each line
             column = row.split()
