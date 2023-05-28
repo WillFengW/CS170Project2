@@ -1,5 +1,6 @@
-import math
 import random
+import time
+from validator import validator
 
 
 def forward_selection(dataset, num_of_features):
@@ -84,68 +85,69 @@ def leaveOutCrossValidation(dataset, current_set, feature_to_add):
     return round(random.uniform(0, 100), 1)
 
 
-def nearest_neighbor_classifier(dataset):
-    number_correctly_classified = 0
-
-    for i in range(len(dataset)):                   # len(dataset) = number of rows
-        object_to_classify = dataset[i][0:]         # the object means the whole row in dataset
-        label_object_to_classify = dataset[i][0]
-        nearest_distance = math.inf
-        nearest_location = math.inf
-        nearest_label = 0
-
-        for k in range(len(dataset)):
-            temp_sum = 0
-            if k != i:
-                for m in range(1, len(object_to_classify)):         # not include comparison with class label
-                    #sum up (each feature (index: m) in classify object minus the kth object)^2
-                    temp_sum += pow(float(object_to_classify[m]) - float(dataset[k][m]), 2)
-                distance = math.sqrt(temp_sum)
-                if distance < nearest_distance:
-                    nearest_distance = distance
-                    nearest_location = k
-                    nearest_label = dataset[k][0]
-        print("Object ", i+1, " is class ", int(float(label_object_to_classify)))
-        print("Its nearest_neighbor is ", nearest_location+1, " which is in class ", int(float(nearest_label)))
-
-        if label_object_to_classify == nearest_label:
-            number_correctly_classified += 1
-
-    accuracy = number_correctly_classified / len(dataset)
-    return accuracy
-
-
-# Main
-print("Welcome to Team 22's Feature Selection Algorithm.")
-print("1. Forward Selection")
-print("2. Backward Elimination")
-print("3. Team 22’s Special Algorithm")
-print("4. Check Nearest-Neighbor Accuracy")
-choice = int(input("Type the number of the algorithm you want to run: "))
-correct_count = 0
-with open("small-test-dataset.txt", "r") as file:
-    data = []
-    for row in file.readlines():  # get each line
-        data.append(row.split())  # split the line and get each column value then add to data_set
-number_of_features = len(data[0]) - 1
-if choice == 1:
-    forward_selection(data, number_of_features)
-elif choice == 2:
-    backward_elimination(data, number_of_features)
-elif choice == 3:
-    special_algorithm(data)
-elif choice == 4:
+if __name__ == "__main__":
+    print("Welcome to Team 22's Feature Selection Algorithm.")
+    print("1. Forward Selection")
+    print("2. Backward Elimination")
+    print("3. Team 22's Special Algorithm")
+    print("4. Check Nearest-Neighbor Accuracy")
+    choice = int(input("Type the number of the algorithm you want to run: "))
     with open("small-test-dataset.txt", "r") as file:
-        data_set = []
-        for row in file.readlines():            # get each line
-            column = row.split()
-            column_to_add = [column[0], column[3], column[5], column[7]]
-            data_set.append(column_to_add)        # split the line and get each column value then add to data_set
-    print("Accuracy for the small dataset is ", round(nearest_neighbor_classifier(data_set), 3))
-    with open("large-test-dataset.txt", "r") as file:
-        data_set = []
-        for row in file.readlines():            # get each line
-            column = row.split()
-            column_to_add = [column[0], column[1], column[15], column[27]]
-            data_set.append(column_to_add)        # split the line and get each column value then add to data_set
-    print("Accuracy for the large dataset is ", round(nearest_neighbor_classifier(data_set), 3))
+        data = []
+        for row in file.readlines():  # get each line
+            data.append(row.split())  # split the line and get each column value then add to data_set
+    number_of_features = len(data[0]) - 1
+    if choice == 1:
+        forward_selection(data, number_of_features)
+    elif choice == 2:
+        backward_elimination(data, number_of_features)
+    elif choice == 3:
+        special_algorithm(data)
+    elif choice == 4:
+        print("\n1. Small-data-set")
+        print("2. Small-data-set (only features 3,5,7)")
+        print("3. large-data-set")
+        print("4. large-data-set (only features 1,15,27)")
+        choice = int(input("Type which data set you want to run: "))
+        valid = validator()
+        
+        if choice == 1:
+            with open("small-test-dataset.txt", "r") as file:
+                data_set = []
+                for row in file.readlines():            # get each line
+                    column = row.split()
+                    data_set.append(column)        # split the line and get each column value then add to data_set
+            start_time = time.time()
+            print("Accuracy for the small dataset is ", round(valid.validation(data_set), 3))
+            print("--- %s seconds ---" % (time.time() - start_time))
+        elif choice == 2:
+            with open("small-test-dataset.txt", "r") as file:
+                data_set = []
+                for row in file.readlines():            # get each line
+                    column = row.split()
+                    column_to_add = [column[0], column[3], column[5], column[7]]
+                    data_set.append(column_to_add)        # split the line and get each column value then add to data_set
+            start_time = time.time()
+            print("Accuracy for the small dataset is ", round(valid.validation(data_set), 3))
+            print("--- %s seconds ---" % (time.time() - start_time))
+        elif choice == 3:
+            with open("large-test-dataset.txt", "r") as file:
+                data_set = []
+                for row in file.readlines():            # get each line
+                    column = row.split()
+                    data_set.append(column)        # split the line and get each column value then add to data_set
+            start_time = time.time()
+            print("Accuracy for the large dataset is ", round(valid.validation(data_set), 3))
+            print("--- %s seconds ---" % (time.time() - start_time))
+        elif choice == 4:
+            with open("large-test-dataset.txt", "r") as file:
+                data_set = []
+                for row in file.readlines():            # get each line
+                    column = row.split()
+                    column_to_add = [column[0], column[1], column[15], column[27]]
+                    data_set.append(column_to_add)        # split the line and get each column value then add to data_set
+            start_time = time.time()
+            print("Accuracy for the large dataset is ", round(valid.validation(data_set), 3))
+            print("--- %s seconds ---" % (time.time() - start_time))
+            
+        
