@@ -127,7 +127,7 @@ def special_algorithm(dataset,num_of_features):
     currentSet = [0]
     decreasingCount = 0  # use to stop searching when accuracy decreases
     highestAccuracy = 0
-    outputFeatures = ""
+    output_features = ""
     bestFeatures = ""
     acc_list = np.zeros((num_of_features-1,2))
     acc_list[:, 0] = np.arange(1,num_of_features)
