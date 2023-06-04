@@ -1,4 +1,5 @@
 from NNclassifier import NNclassifier
+import numpy as np
 
 class validator:
     def validation(self, dataset: list):

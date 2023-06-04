@@ -2,10 +2,18 @@ import time
 from validator import validator
 import numpy as np
 
+def normalization(data: np.ndarray):
+    normal_data = data
+    for i in range(1, normal_data.shape[1]):
+        temp = normal_data[:, i]
+        normal_data[:, i] = (temp - np.average(temp)) / np.std(temp)
+    return normal_data
+        
 
 def forward_selection(dataset, num_of_features):
     valid = validator()
-    allData = np.array(dataset)                                 # ndarray easy for slicing
+    allData = np.array(dataset).astype(float)                   # ndarray easy for slicing
+    temp1 = normalization(allData)
     currentSet = [0]
     decreasingCount = 0                                         # use to stop searching when accuracy decreases
     highestAccuracy = 0
@@ -22,15 +30,12 @@ def forward_selection(dataset, num_of_features):
                 slicedCol = currentSet.copy()
                 slicedCol.extend([i])
                 slicedCol.sort()                                # sort only for output format         
-                currData = allData[:, slicedCol]                # slicing the data
+                currData = temp1.copy()[:, slicedCol]           # slicing the data
                 accuracy = valid.validation(currData.tolist())  # make sure to have tolist()
                 
                 # output stuff
-                temp = str(slicedCol[1])
-                if len(slicedCol) > 2:
-                    for j in range(2, len(slicedCol)):
-                        temp = temp + "," + str(slicedCol[j])
-                print("        Using feature(s) {", temp, "} accuracy is", accuracy, "%")
+                temp = " ".join(str(s) for s in slicedCol)
+                print("        Using feature(s) {", temp[2:], "} accuracy is", accuracy, "%")
                 
                 # get the local highest
                 if accuracy > bsf_accuracy:
@@ -38,7 +43,7 @@ def forward_selection(dataset, num_of_features):
                     outputFeatures = temp
                     colToKeep = slicedCol
         currentSet = colToKeep.copy()
-        print("\nFeature set {", outputFeatures, "} was best, accuracy is", bsf_accuracy, "%\n")
+        print("\nFeature set {", outputFeatures[2:], "} was best, accuracy is", bsf_accuracy, "%\n")
         
         if bsf_accuracy <= highestAccuracy:
             print("(Warning, Accuracy has decreased!)\n")
@@ -48,15 +53,14 @@ def forward_selection(dataset, num_of_features):
         else:
             highestAccuracy = bsf_accuracy                      # get the global highest
             bestFeatures = outputFeatures
-    print("Finished search!! The best feature subset is {", bestFeatures, "} which has an accuracy of", highestAccuracy,
-          "%")
+    print("Finished search!! The best feature subset is {", bestFeatures[2:], "} which has an accuracy of", highestAccuracy)
 
 def backward_elimination(dataset, num_of_features):
     valid = validator()
-    allData = np.array(dataset)
-    currentSet = list(range(num_of_features))                   
+    allData = np.array(dataset).astype(float)
+    currentSet = list(range(num_of_features))                 
     decreasingCount = 0
-    highestAccuracy = valid.validation(dataset)
+    highestAccuracy = valid.validation(allData.tolist())
     print("Using all", num_of_features-1, "features, I get an accuracy of", highestAccuracy, "%\n")
     print("Beginning search.\n")
     output_features = ""
@@ -70,21 +74,19 @@ def backward_elimination(dataset, num_of_features):
                 slicedCol = currentSet.copy()
                 slicedCol.remove(i)                             # removing instead of extending
                 slicedCol.sort() 
-                currData = allData[:, slicedCol]
+                currData = allData.copy()[:, slicedCol]
                 accuracy = valid.validation(currData.tolist())
                 
-                temp = str(slicedCol[1])
-                if len(slicedCol) > 2:
-                    for j in range(2, len(slicedCol)):
-                        temp = temp + "," + str(slicedCol[j])
-                print("        Feature set after removing", i, " {", temp, "} accuracy is", accuracy, "%")
+                # output stuff
+                temp = " ".join(str(s) for s in slicedCol)
+                print("        Using feature(s) {", temp[2:], "} accuracy is", accuracy, "%")
                 
                 if accuracy > bsf_accuracy:
                     bsf_accuracy = accuracy
                     output_features = temp
                     colToKeep = slicedCol
         currentSet = colToKeep.copy()
-        print("\nFeature set {", output_features, "} was best, accuracy is", bsf_accuracy, "%\n")
+        print("\nFeature set {", output_features[2:], "} was best, accuracy is", bsf_accuracy, "%\n")
         
         if bsf_accuracy <= highestAccuracy:
             print("(Warning, Accuracy has decreased!)\n")
@@ -94,8 +96,7 @@ def backward_elimination(dataset, num_of_features):
         else:
             highestAccuracy = bsf_accuracy
             bestFeatures = output_features
-    print("Finished search!! The best feature subset is {", bestFeatures, "} which has an accuracy of", highestAccuracy,
-          "%")
+    print("Finished search!! The best feature subset is {", bestFeatures[2:], "} which has an accuracy of", highestAccuracy)
 
 def special_algorithm(dataset,num_of_features):
     valid = validator()
