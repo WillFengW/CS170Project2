@@ -17,7 +17,16 @@ def forward_selection(dataset, num_of_features):
     currentSet = [0]
     decreasingCount = 0                                         # use to stop searching when accuracy decreases
     highestAccuracy = 0
-    print("Using no features, I get an accuracy of ", highestAccuracy, "%\n")
+    class1_count = 0
+    for i in range(len(dataset)):
+        if float(dataset[i][0]) == float(1):
+            class1_count += 1
+    class2_count = len(dataset) - class1_count
+    if class1_count >= class2_count:
+        highestAccuracy = class1_count / len(dataset)
+    else:
+        highestAccuracy = class2_count / len(dataset)
+    print("Using no features, the default rate is ", highestAccuracy, "\n")
     print("Beginning search.\n")
     outputFeatures = ""
     bestFeatures = ""
@@ -72,6 +81,8 @@ def backward_elimination(dataset, num_of_features):
         for i in range(1, num_of_features):
             if i in currentSet:
                 slicedCol = currentSet.copy()
+                if len(slicedCol) == 2:
+                    break
                 slicedCol.remove(i)                             # removing instead of extending
                 slicedCol.sort() 
                 currData = allData.copy()[:, slicedCol]
@@ -98,9 +109,17 @@ def backward_elimination(dataset, num_of_features):
             bestFeatures = output_features
     print("Finished search!! The best feature subset is {", bestFeatures[2:], "} which has an accuracy of", highestAccuracy)
 
+'''
+The logic of this algorithm is to find the "weight" of each features (individual 
+accuracy). And, using the weight ranking to eliminate the least important feature 
+like the backward elimination. This algorithm significantly reduce the run time comparing
+to normal backward elimination when dataset is huge. Also, since run time is reduced,
+we can try using the time to run more test (increase the acceptability of having 
+more reduce accuracy situations)
+'''
 def special_algorithm(dataset,num_of_features):
     valid = validator()
-    allData = np.array(dataset)  # ndarray easy for slicing
+    allData = np.array(dataset).astype(float)  # ndarray easy for slicing
     currentSet = [0]
     decreasingCount = 0  # use to stop searching when accuracy decreases
     highestAccuracy = 0
@@ -119,7 +138,10 @@ def special_algorithm(dataset,num_of_features):
         counter += 1
     sorted_list = np.argsort(acc_list[:,1])
     ranking = acc_list[sorted_list]
-    print(ranking)
+    print("\nWeight of each feature(low to high):")
+    print("\nFeature   Accuracy")
+    for row in ranking:
+        print("{:<10} {:<10}".format(int(row[0]), row[1]))
     currentSet = list(range(num_of_features))
     while True:
         bsf_accuracy = 0
@@ -139,14 +161,14 @@ def special_algorithm(dataset,num_of_features):
         if len(slicedCol) > 2:
             for j in range(2, len(slicedCol)):
                 temp = temp + "," + str(slicedCol[j])
-        print("\n\nNew feature set after removing", col_remove, " {", temp, "} accuracy is", accuracy, "%")
+        print("\n\nNew feature set after removing", col_remove, " {", temp, "} accuracy is", accuracy)
 
         if accuracy > bsf_accuracy:
             bsf_accuracy = accuracy
             output_features = temp
             colToKeep = slicedCol
         currentSet = colToKeep.copy()
-        print("\nPreviously, feature set {", bestFeatures, "} was best, accuracy is", highestAccuracy, "%\n")
+        print("\nPreviously, feature set {", bestFeatures, "} was best, accuracy is", highestAccuracy, "\n")
 
         if bsf_accuracy <= highestAccuracy:
             print("(Warning, Accuracy has decreased!)\n")
@@ -156,8 +178,7 @@ def special_algorithm(dataset,num_of_features):
         else:
             highestAccuracy = bsf_accuracy
             bestFeatures = output_features
-    print("Finished search!! The best feature subset is {", bestFeatures, "} which has an accuracy of", highestAccuracy,
-          "%")
+    print("\nFinished search!! The best feature subset is {", bestFeatures, "} which has an accuracy of", highestAccuracy)
 
 if __name__ == "__main__":
     print("Welcome to Team 22's Feature Selection Algorithm.")
