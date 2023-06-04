@@ -15,6 +15,7 @@ class NNclassifier:
                 for m in range(1, object_len):                  # ignore the first column - label
                                                                 # Euclidean Distance
                     temp_sum += pow(object_to_classify[m] - train_object[m], 2)
+                temp_sum = math.sqrt(temp_sum)
                 if temp_sum < nearest_distance:
                     nearest_distance = temp_sum
                     nearest_label = train_object[0]
