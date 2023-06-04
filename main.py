@@ -136,7 +136,7 @@ def special_algorithm(dataset,num_of_features):
         slicedCol = currentSet.copy()
         slicedCol.extend([i])
         slicedCol.sort()
-        currData = allData[:, slicedCol]
+        currData = normal_allData[:, slicedCol]
         accuracy = valid.validation(currData.tolist())
         acc_list[i-1][1] = accuracy
         
@@ -159,7 +159,7 @@ def special_algorithm(dataset,num_of_features):
         else:
             slicedCol.remove(col_remove)  # removing instead of extending
         slicedCol.sort()
-        currData = allData[:, slicedCol]
+        currData = normal_allData[:, slicedCol]
         accuracy = valid.validation(currData.tolist())
 
         temp = " ".join(str(s) for s in slicedCol)
@@ -179,7 +179,7 @@ def special_algorithm(dataset,num_of_features):
                 break
         else:
             highestAccuracy = bsf_accuracy
-            bestFeatures = outputFeatures
+            bestFeatures = output_features
     print("\nFinished search!! The best feature subset is {", bestFeatures[2:], "} which has an accuracy of", highestAccuracy)
 
 
