@@ -104,7 +104,7 @@ def backward_elimination(dataset, num_of_features):
         if bsf_accuracy <= highestAccuracy:
             print("(Warning, Accuracy has decreased!)\n")
             decreasingCount += 1
-            if decreasingCount >= num_of_features / 4:
+            if decreasingCount >= num_of_features / 3:
                 break
         else:
             highestAccuracy = bsf_accuracy
