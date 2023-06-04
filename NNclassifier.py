@@ -13,6 +13,8 @@ class NNclassifier:
         part_len = int(len(dataset)/4)                          # Size of array that each thread need to check
         start = part_len * part                                 # Starting index for dataset
         end = start + part_len                                  # Ending index for dataset
+        if part == 3:
+            end = int(len(dataset))
         
         nearest_distance = math.inf
         nearest_label = 0
