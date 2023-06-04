@@ -98,8 +98,66 @@ def backward_elimination(dataset, num_of_features):
             bestFeatures = output_features
     print("Finished search!! The best feature subset is {", bestFeatures[2:], "} which has an accuracy of", highestAccuracy)
 
-def special_algorithm(dataset):
-    return
+def special_algorithm(dataset,num_of_features):
+    valid = validator()
+    allData = np.array(dataset)  # ndarray easy for slicing
+    currentSet = [0]
+    decreasingCount = 0  # use to stop searching when accuracy decreases
+    highestAccuracy = 0
+    outputFeatures = ""
+    bestFeatures = ""
+    acc_list = np.zeros((num_of_features-1,2))
+    acc_list[:, 0] = np.arange(1,num_of_features)
+    counter = 0
+    for i in range(1, num_of_features):
+        slicedCol = currentSet.copy()
+        slicedCol.extend([i])
+        slicedCol.sort()
+        currData = allData[:, slicedCol]
+        accuracy = valid.validation(currData.tolist())
+        acc_list[counter][1] = accuracy
+        counter += 1
+    sorted_list = np.argsort(acc_list[:,1])
+    ranking = acc_list[sorted_list]
+    print(ranking)
+    currentSet = list(range(num_of_features))
+    while True:
+        bsf_accuracy = 0
+        colToKeep = []
+        slicedCol = currentSet.copy()
+        col_remove = int(ranking[0][0])
+        ranking = ranking[1:]
+        if len(slicedCol) == 2:
+            break
+        else:
+            slicedCol.remove(col_remove)  # removing instead of extending
+        slicedCol.sort()
+        currData = allData[:, slicedCol]
+        accuracy = valid.validation(currData.tolist())
+
+        temp = str(slicedCol[1])
+        if len(slicedCol) > 2:
+            for j in range(2, len(slicedCol)):
+                temp = temp + "," + str(slicedCol[j])
+        print("\n\nNew feature set after removing", col_remove, " {", temp, "} accuracy is", accuracy, "%")
+
+        if accuracy > bsf_accuracy:
+            bsf_accuracy = accuracy
+            output_features = temp
+            colToKeep = slicedCol
+        currentSet = colToKeep.copy()
+        print("\nPreviously, feature set {", bestFeatures, "} was best, accuracy is", highestAccuracy, "%\n")
+
+        if bsf_accuracy <= highestAccuracy:
+            print("(Warning, Accuracy has decreased!)\n")
+            decreasingCount += 1
+            if decreasingCount >= num_of_features / 2:
+                break
+        else:
+            highestAccuracy = bsf_accuracy
+            bestFeatures = output_features
+    print("Finished search!! The best feature subset is {", bestFeatures, "} which has an accuracy of", highestAccuracy,
+          "%")
 
 if __name__ == "__main__":
     print("Welcome to Team 22's Feature Selection Algorithm.")
@@ -137,7 +195,9 @@ if __name__ == "__main__":
         backward_elimination(data, number_of_features)
         print("--- %s seconds ---" % round((time.time() - start_time), 6))
     elif choice == 3:
-        special_algorithm(data)
+        start_time = time.time()
+        special_algorithm(data, number_of_features)
+        print("--- %s seconds ---" % round((time.time() - start_time), 6))
     elif choice == 4:
         print("\n1. Small-data-set")
         print("2. Small-data-set (only features 3,5,7)")
