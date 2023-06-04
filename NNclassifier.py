@@ -73,9 +73,9 @@ class NNclassifier:
     
     def classifier(self, dataset: list, object: list, index: int):
                                                                 # Normal classifier
-        #return self.test(self.train(dataset, object, index), object[0])    
+        return self.test(self.train(dataset, object, index), object[0])    
                                                                 # Multithreading classifier    
-        return self.test(self.multithreading(dataset, object, index), object[0])
+        #return self.test(self.multithreading(dataset, object, index), object[0])
     
     
         
