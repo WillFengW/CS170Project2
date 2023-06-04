@@ -10,7 +10,7 @@ class NNclassifier:
     def train_by_part(self, dataset: list, object: list, index: int, part: int, q):   
         object_to_classify = object                             # Single point/row to classify
         object_len = len(object_to_classify)
-        part_len = int(len(dataset)/4)                         # Size of array that each thread need to check
+        part_len = int(len(dataset)/4)                          # Size of array that each thread need to check
         start = part_len * part                                 # Starting index for dataset
         end = start + part_len                                  # Ending index for dataset
         
@@ -31,7 +31,7 @@ class NNclassifier:
         q.put([nearest_label, nearest_distance])                # Save the result
     
     def multithreading(self, dataset: list, object: list, index: int):
-        number_of_threads = 4                                  # Number of threads you want
+        number_of_threads = 4                                   # Number of threads you want
         q = Queue()                                             # Queue for saving multithreading result
         threads = []
 
