@@ -186,10 +186,10 @@ def special_algorithm(dataset,num_of_features):
 if __name__ == "__main__":
     print("Welcome to Team 22's Feature Selection Algorithm.")
     print("Please choose the data set: ")
-    print("1, Initial Small")
-    print("2, Initial Large")
+    print("1, General Small")
+    print("2, General Large")
     print("3, Personal Small")
-    print("4, Persobal Large")
+    print("4, Personal Large")
     choice = int(input("Type the number of the data set you want to run: "))
     if choice == 1:
         data_chosen = "small-test-dataset.txt"
