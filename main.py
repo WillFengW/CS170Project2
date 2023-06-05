@@ -1,6 +1,7 @@
 import time
 from validator import validator
 import numpy as np
+from plot import plot
 
 def normalization(data: np.ndarray):
     normal_data = data
@@ -17,7 +18,7 @@ def forward_selection(dataset, num_of_features):
     currentSet = [0]
     decreasingCount = 0                                         # use to stop searching when accuracy decreases
     highestAccuracy = 0
-
+    '''
     class1_count = 0
     for i in range(len(dataset)):
         if float(dataset[i][0]) == float(1):
@@ -27,6 +28,8 @@ def forward_selection(dataset, num_of_features):
         highestAccuracy = class1_count / len(dataset)
     else:
         highestAccuracy = class2_count / len(dataset)
+    '''
+    
     print("Using no features, the default rate is ", highestAccuracy, "\n")
     print("Beginning search.\n")
     outputFeatures = ""
@@ -64,6 +67,8 @@ def forward_selection(dataset, num_of_features):
             highestAccuracy = bsf_accuracy                      # get the global highest
             bestFeatures = outputFeatures
     print("Finished search!! The best feature subset is {", bestFeatures[2:], "} which has an accuracy of", highestAccuracy)
+    
+    return bestFeatures
 
 def backward_elimination(dataset, num_of_features):
     valid = validator()
@@ -110,6 +115,7 @@ def backward_elimination(dataset, num_of_features):
             highestAccuracy = bsf_accuracy
             bestFeatures = output_features
     print("Finished search!! The best feature subset is {", bestFeatures[2:], "} which has an accuracy of", highestAccuracy)
+    return bestFeatures
 
 
 '''
@@ -181,6 +187,7 @@ def special_algorithm(dataset,num_of_features):
             highestAccuracy = bsf_accuracy
             bestFeatures = output_features
     print("\nFinished search!! The best feature subset is {", bestFeatures[2:], "} which has an accuracy of", highestAccuracy)
+    return bestFeatures
 
 
 if __name__ == "__main__":
@@ -204,6 +211,7 @@ if __name__ == "__main__":
     print("2. Backward Elimination")
     print("3. Team 22's Special Algorithm")
     print("4. Check Nearest-Neighbor Accuracy (part 2)")
+    print("5. plot")
     choice = int(input("Type the number of the algorithm you want to run: "))
     with open(data_chosen, "r") as file:
         data = []
@@ -212,15 +220,15 @@ if __name__ == "__main__":
     number_of_features = len(data[0])
     if choice == 1:
         start_time = time.time()
-        forward_selection(data, number_of_features)
+        bestFeatures = forward_selection(data, number_of_features)
         print("--- %s seconds ---" % round((time.time() - start_time), 6))
     elif choice == 2:
         start_time = time.time()
-        backward_elimination(data, number_of_features)
+        bestFeatures = backward_elimination(data, number_of_features)
         print("--- %s seconds ---" % round((time.time() - start_time), 6))
     elif choice == 3:
         start_time = time.time()
-        special_algorithm(data, number_of_features)
+        bestFeatures = special_algorithm(data, number_of_features)
         print("--- %s seconds ---" % round((time.time() - start_time), 6))
     elif choice == 4:
         print("\n1. Small-data-set")
@@ -256,7 +264,11 @@ if __name__ == "__main__":
                     column = row.split()
                     column_to_add = [column[0], column[1], column[15], column[27]]
                     data_set.append(column_to_add)
-        
         start_time = time.time()
         print("Accuracy for the dataset is ", round(valid.validation(data_set), 3))
         print("--- %s seconds ---" % round((time.time() - start_time), 6))
+    elif choice == 5:
+        allData = np.array(data).astype(float)
+        normal_allData = normalization(allData)
+        plt = plot(normal_allData,data_chosen)
+        plt.plotData()
